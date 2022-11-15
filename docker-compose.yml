@@ -1,0 +1,30 @@
+version: "3.4"
+
+services:
+
+  db:
+    container_name: ${DB_NAME}
+    image: postgres:12
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - ${POSTGRES_PORT}:5432
+    volumes:
+      - my_project:/var/lib/postgresql/data
+
+
+  app:
+    build: ""
+    container_name: my_project
+    env_file:
+      - .env
+    command: bash -c "cd src && strawberry server schema"
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/src
+
+
+volumes:
+  my_project:
